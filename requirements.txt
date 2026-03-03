@@ -1,0 +1,11 @@
+fastapi==0.128.2
+uvicorn==0.40.0
+prisma-client-py==0.15.0
+python-dotenv==1.2.1
+pydantic==2.12.5
+asyncpg==0.31.0
+pydantic-settings
+passlib[bcrypt]==1.7.4
+bcrypt==4.0.1
+pydantic[email]
+psycopg2-binary
