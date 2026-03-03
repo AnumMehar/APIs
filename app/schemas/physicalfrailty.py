@@ -15,7 +15,7 @@ class PhysicalFrailtyTestCreate(BaseModel):
 # 🔹 Response Schema (matches Prisma model)
 class PhysicalFrailtyResponse(BaseModel):
     # uuid: UUID
-    n_id: int
+    # n_id: int
     User_uuid: UUID
     PF_test_id: int
     created_at: Optional[datetime]
@@ -115,3 +115,4 @@ class PhysicalFrailtyOut(BaseModel):
 
     class Config:
         from_attributes = True
+
