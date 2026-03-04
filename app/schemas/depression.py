@@ -1,24 +1,3 @@
-
-# # from pydantic import BaseModel
-# # from typing import List
-# # from datetime import datetime
-# #
-# # class DepressionAnswer(BaseModel):
-# #     question_no: int
-# #     answer: bool
-# #     score: int
-# #
-# # class DepressionSubmit(BaseModel):
-# #     user_uuid: str
-# #     answers: List[DepressionAnswer]
-#
-# class DepressionResponse(BaseModel):
-#     Dep_test_id: int
-#     user_uuid: str
-#     final_scores: int
-#     final_result: str
-#     created_at: datetime
-
 from pydantic import BaseModel, Field, AliasChoices
 from typing import List, Optional
 from datetime import datetime
@@ -58,4 +37,5 @@ class DepressionOut(BaseModel):
     completed_at: str = Field(validation_alias=AliasChoices("completed_at", "completed_at"))
 
     class Config:
+
         from_attributes = True
