@@ -1,92 +1,3 @@
-# from fastapi import APIRouter, HTTPException
-# from app.schemas.dementia import DementiaSubmit, DementiaResponse
-# from app.db.prisma import prisma
-# from app.services.dementia_service import dementia_result
-# from app.utils.errors import not_found, internal_server_error
-# from datetime import datetime
-#
-# router = APIRouter()
-#
-#
-# # ---------------- API ----------------
-# @router.post("/", response_model=DementiaResponse)
-# async def dementia_test(data: DementiaSubmit):
-#     try:
-#         record = {}
-#
-#         # ----------- CREATE NEW TEST -----------
-#         if not data.test_id:
-#             if not data.user_uuid:
-#                 raise HTTPException(status_code=400, detail="user_uuid required for new test")
-#             if not data.questions:
-#                 raise HTTPException(status_code=400, detail="questions required for new test")
-#
-#             # Check user exists
-#             user = await prisma.user.find_unique(where={"uuid": data.user_uuid})
-#             if not user:
-#                 not_found("User not found")
-#
-#             # Map questions and calculate total earned points
-#             total = sum(q.earned for q in data.questions)
-#             record["user_uuid"] = data.user_uuid
-#             record["total_earned_point"] = total
-#             record["final_result"] = dementia_result(total)
-#             record["is_submitted"] = False
-#             record["completed_at"] = None
-#             record["sync_status"] = 0  # ensure worker picks it
-#
-#             for q in data.questions:
-#                 record[f"Q{q.no}_ans"] = q.answer
-#                 record[f"Q{q.no}_P_point"] = q.possible
-#                 record[f"Q{q.no}_E_point"] = q.earned
-#
-#             result = await prisma.dementia_screening.create(data=record)
-#             return result
-#
-#         # ----------- UPDATE EXISTING TEST -----------
-#         test = await prisma.dementia_screening.find_unique(
-#             where={"dem_test_id": data.test_id}
-#         )
-#         if not test:
-#             raise HTTPException(status_code=404, detail="Dementia test not found")
-#         if getattr(test, "is_submitted", False):
-#             raise HTTPException(status_code=400, detail="Test already submitted")
-#
-#         # Merge new answers with existing ones
-#         existing_earned = [getattr(test, f"Q{i}_E_point") or 0 for i in range(1, 13)]  # 12 questions
-#
-#         if data.questions:
-#             for q in data.questions:
-#                 record[f"Q{q.no}_ans"] = q.answer
-#                 record[f"Q{q.no}_P_point"] = q.possible
-#                 record[f"Q{q.no}_E_point"] = q.earned
-#                 existing_earned[q.no - 1] = q.earned
-#
-#             total = sum(existing_earned)
-#             record["total_earned_point"] = total
-#             record["final_result"] = dementia_result(total)
-#
-#         # Handle final submit
-#         if data.submit_test:
-#             record["is_submitted"] = True
-#             record["completed_at"] = datetime.utcnow()
-#         else:
-#             record["is_submitted"] = False
-#             record["completed_at"] = None
-#
-#         # Ensure sync worker will pick it
-#         record["sync_status"] = 0
-#
-#         updated = await prisma.dementia_screening.update(
-#             where={"dem_test_id": data.test_id},
-#             data=record
-#         )
-#         return updated
-#
-#     except Exception as e:
-#         print("Dementia error:", e)
-#         internal_server_error("Failed dementia test operation")
-
 from fastapi import APIRouter, HTTPException
 from app.schemas.dementia import DementiaSubmit, DementiaResponse
 from app.db.prisma import prisma
@@ -209,4 +120,5 @@ async def dementia_test(data: DementiaSubmit):
 
     except Exception as e:
         print("Dementia error:", e)
+
         internal_server_error("Failed dementia test operation")
