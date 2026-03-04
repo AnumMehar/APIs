@@ -1,0 +1,195 @@
+generator client {
+  provider             = "prisma-client-py"
+  recursive_type_depth = "5"
+  interface            = "asyncio"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+}
+
+model User {
+  uuid                 String                 @id @default(dbgenerated("gen_random_uuid()")) @map("uuid") @db.Uuid
+  n_id                 Int                    @unique @default(autoincrement()) @map("N_ID")
+  created_at           DateTime?              @default(now()) @map("created_at") @db.Timestamptz(6)
+  name                 String?                @map("Name")
+  age                  Int?                   @map("Age")
+  gender               String?                @map("Gender")
+  national_id          String?                @unique @map("National_ID")
+  is_deleted           Boolean?               @default(false)
+  assigned_doctor_uuid String?                @db.Uuid
+  updated_at           DateTime?              @default(now()) @updatedAt @db.Timestamptz(6)
+  sync_status Int? @default(0)
+  DementiaScreenings   Dementia_Screening[]
+  DepressionScreenings Depression_Screening[]
+  physicalFrailty      PhysicalFrailty[]
+  Reports              Report[]
+  @@map("user")
+}
+
+model Depression_Screening {
+  uuid          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_uuid     String?   @map("User_uuid") @db.Uuid
+  Dep_test_id   Int       @unique @default(autoincrement())
+  created_at    DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  sync_status Int? @default(0)
+  is_submitted   Boolean  @default(false)
+  completed_at   DateTime?
+  Q1_ans        Boolean?
+  Q1_ans_score  Int?
+  Q2_ans        Boolean?
+  Q2_ans_score  Int?
+  Q3_ans        Boolean?
+  Q3_ans_score  Int?
+  Q4_ans        Boolean?
+  Q4_ans_score  Int?
+  Q5_ans        Boolean?
+  Q5_ans_score  Int?
+  Q6_ans        Boolean?
+  Q6_ans_score  Int?
+  Q7_ans        Boolean?
+  Q7_ans_score  Int?
+  Q8_ans        Boolean?
+  Q8_ans_score  Int?
+  Q9_ans        Boolean?
+  Q9_ans_score  Int?
+  Q10_ans       Boolean?
+  Q10_ans_score Int?
+  Q11_ans       Boolean?
+  Q11_ans_score Int?
+  Q12_ans       Boolean?
+  Q12_ans_score Int?
+  Q13_ans       Boolean?
+  Q13_ans_score Int?
+  Q14_ans       Boolean?
+  Q14_ans_score Int?
+  Q15_ans       Boolean?
+  Q15_ans_score Int?
+  final_scores  Int?      @map("Final_scores")
+  final_result  String?   @map("Final_result")
+  user          User?     @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade, onUpdate: NoAction)
+  report        Report[]
+}
+
+model Dementia_Screening {
+  uuid               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_uuid          String?   @map("User_uuid") @db.Uuid
+  dem_test_id        Int       @unique @default(autoincrement()) @map("Dem_test_id")
+  created_at         DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  sync_status Int? @default(0)
+  is_submitted   Boolean  @default(false)
+  completed_at   DateTime?
+  Q1_ans             String?
+  Q1_P_point         Int?
+  Q1_E_point         Int?
+  Q2_ans             String?
+  Q2_P_point         Int?
+  Q2_E_point         Int?
+  Q3_ans             String?
+  Q3_P_point         Int?
+  Q3_E_point         Int?
+  Q4_ans             String?
+  Q4_P_point         Int?
+  Q4_E_point         Int?
+  Q5_ans             String?
+  Q5_P_point         Int?
+  Q5_E_point         Int?
+  Q6_ans             String?
+  Q6_P_point         Int?
+  Q6_E_point         Int?
+  Q7_ans             String?
+  Q7_P_point         Int?
+  Q7_E_point         Int?
+  Q8_ans             String?
+  Q8_P_point         Int?
+  Q8_E_point         Int?
+  Q9_ans             String?
+  Q9_P_point         Int?
+  Q9_E_point         Int?
+  Q10_ans            String?
+  Q10_P_point        Int?
+  Q10_E_point        Int?
+  Q11_ans            String?
+  Q11_P_point        Int?
+  Q11_E_point        Int?
+  Q12_ans            String?
+  Q12_P_point        Int?
+  Q12_E_point        Int?
+  total_earned_point Int?      @map("Total_earned_point")
+  final_result       String?   @map("Final_result")
+  user               User?     @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade, onUpdate: NoAction)
+  report             Report[]
+}
+
+model PhysicalFrailty {
+  uuid        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  User_uuid   String   @db.Uuid
+  PF_test_id  Int      @unique @default(autoincrement()) @map("PF_test_id")
+  created_at  DateTime? @default(now()) @db.Timestamptz(6)
+  sync_status Int? @default(0)
+
+  Walking_speed_r1               Float?
+  walking_speed_r1_created_at    DateTime? @db.Timestamptz(6)
+  walking_speed_r1_is_done       Boolean?  @default(false)
+
+  Walking_speed_r2               Float?
+  walking_speed_r2_created_at    DateTime? @db.Timestamptz(6)
+  walking_speed_r2_is_done       Boolean?  @default(false)
+
+  Functional_reach_r1            Float?
+  functional_reach_r1_created_at DateTime? @db.Timestamptz(6)
+  functional_reach_r1_is_done    Boolean?  @default(false)
+
+  Functional_reach_r2            Float?
+  functional_reach_r2_created_at DateTime? @db.Timestamptz(6)
+  functional_reach_r2_is_done    Boolean?  @default(false)
+
+  Standing_on_one_leg_r1            Float?
+  standing_on_one_leg_r1_created_at DateTime? @db.Timestamptz(6)
+  standing_on_one_leg_r1_is_done    Boolean?  @default(false)
+
+  Standing_on_one_leg_r2            Float?
+  standing_on_one_leg_r2_created_at DateTime? @db.Timestamptz(6)
+  standing_on_one_leg_r2_is_done    Boolean?  @default(false)
+
+  Time_up_and_go_r1            Float?
+  time_up_and_go_r1_created_at DateTime? @db.Timestamptz(6)
+  time_up_and_go_r1_is_done    Boolean?  @default(false)
+
+  Time_up_and_go_r2            Float?
+  time_up_and_go_r2_created_at DateTime? @db.Timestamptz(6)
+  time_up_and_go_r2_is_done    Boolean?  @default(false)
+
+  seated_forward_bend_r1            Float?
+  seated_forward_bend_r1_created_at DateTime? @db.Timestamptz(6)
+  seated_forward_bend_r1_is_done    Boolean?  @default(false)
+
+  seated_forward_bend_r2            Float?
+  seated_forward_bend_r2_created_at DateTime? @db.Timestamptz(6)
+  seated_forward_bend_r2_is_done    Boolean?  @default(false)
+
+  user                              User       @relation(fields: [User_uuid], references: [uuid], onDelete: Cascade, onUpdate: NoAction)
+
+  @@map("physical_frailty")
+}
+
+
+model Report {
+  uuid                 String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  Report_test_id       Int                   @unique @default(autoincrement())
+  user_uuid            String                @db.Uuid
+  Dep_test_id          Int?
+  Dem_test_id          Int?
+  PF_test_id           Int?
+  created_at           DateTime?             @default(now()) @db.Timestamptz(6)
+  generated_by         String?               @db.Uuid
+  updated_at           DateTime?             @default(now()) @updatedAt @db.Timestamptz(6)
+  sync_status Int? @default(0)
+  remarks              String?
+  Dementia_Screening   Dementia_Screening?   @relation(fields: [Dem_test_id], references: [dem_test_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_report_dem")
+  Depression_Screening Depression_Screening? @relation(fields: [Dep_test_id], references: [Dep_test_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_report_dep")
+  user                 User                  @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade, onUpdate: NoAction, map: "fk_report_user")
+
+  @@map("report")
+}
