@@ -1,24 +1,3 @@
-# from pydantic import BaseModel
-# from typing import List
-# from datetime import datetime
-#
-# class DementiaQuestion(BaseModel):
-#     no: int
-#     answer: str
-#     possible: int
-#     earned: int
-#
-# class DementiaSubmit(BaseModel):
-#     user_uuid: str
-#     questions: List[DementiaQuestion]
-
-# class DementiaResponse(BaseModel):
-#     dem_test_id: int
-#     user_uuid: str
-#     total_earned_point: int
-#     final_result: str
-#     created_at: datetime
-
 
 from pydantic import BaseModel, Field, AliasChoices
 from typing import List,  Optional
@@ -57,4 +36,5 @@ class DementiaOut(BaseModel):
     completed_at: str = Field(validation_alias=AliasChoices("completed_at", "completed_at"))
 
     class Config:
+
         from_attributes = True
